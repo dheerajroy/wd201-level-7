@@ -21,11 +21,7 @@ class TaskViewSet(ModelViewSet):
     def perform_update(self, serializer):
         task = Task.objects.get(id=self.kwargs['pk'])
         if task.status != serializer.validated_data['status']:
-            TaskChange.objects.update_or_create(task=task, prev_status=task.status, curr_status=serializer.validated_data['status'])
-        elif task.status == serializer.validated_data['status']:
-            TaskChange.objects.update(task=task)
-        else:
-            TaskChange.objects.create(task=task, prev_status=None, curr_status=None)
+            TaskChange.objects.create(task=task, prev_status=task.status, curr_status=serializer.validated_data['status'])
         serializer.save()
 
 class TaskChangeViewSet(ReadOnlyModelViewSet):
